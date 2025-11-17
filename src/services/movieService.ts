@@ -1,31 +1,31 @@
 import axios from "axios";
-import type { MoviesResponse } from "../types/movie";
+import type { Movie } from "../types/movie";
 
-const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+const API_URL = "https://api.themoviedb.org/3/search/movie";
+const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
-const BASE_URL = "https://api.themoviedb.org/3";
+export interface MoviesResponse {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+}
 
-/**
- * Пошук фільмів
- * @param query
- * @param page
- * @returns
- */
-export async function fetchMovies(query: string, page = 1): Promise<MoviesResponse> {
-  if (!TMDB_TOKEN) {
-    throw new Error("TMDB token is missing. Please add it to your .env file.");
-  }
-
-  const response = await axios.get<MoviesResponse>(`${BASE_URL}/search/movie`, {
+export const fetchMovies = async ({
+  query,
+  page,
+}: {
+  query: string;
+  page: number;
+}): Promise<MoviesResponse> => {
+  const response = await axios.get(API_URL, {
     params: {
       query,
       page,
     },
     headers: {
-      Authorization: `Bearer ${TMDB_TOKEN}`,
-      "Content-Type": "application/json;charset=utf-8",
+      Authorization: `Bearer ${TOKEN}`,
     },
   });
 
   return response.data;
-}
+};

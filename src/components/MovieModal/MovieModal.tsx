@@ -1,58 +1,39 @@
-import { useEffect } from "react";
-import { createPortal } from "react-dom";
 import type { Movie } from "../../types/movie";
-import styles from "./MovieModal.module.css";
+import css from "./MovieModal.module.css";
 
-interface MovieModalProps {
+interface Props {
   movie: Movie;
   onClose: () => void;
 }
 
-export default function MovieModal({ movie, onClose }: MovieModalProps) {
-  useEffect(() => {
-    const onEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
+export default function MovieModal({ movie, onClose }: Props) {
+  return (
+    <div className={css.backdrop} onClick={onClose}>
+      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+        <h2>{movie.title}</h2>
 
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onEsc);
+        {}
+        {movie.backdrop_path && (
+          <img
+            src={`https://image.tmdb.org/t/p/w780${movie.backdrop_path}`}
+            alt={movie.title}
+            className={css.backdropImg}
+          />
+        )}
 
-    return () => {
-      document.body.style.overflow = "auto";
-      window.removeEventListener("keydown", onEsc);
-    };
-  }, [onClose]);
+        <p>{movie.overview}</p>
 
-  return createPortal(
-    <div
-      className={styles.backdrop}
-      role="dialog"
-      aria-modal="true"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
-      <div className={styles.modal}>
-        <button className={styles.closeButton} onClick={onClose}>
-          &times;
+        {/* release_date */}
+        {movie.release_date && (
+          <p>
+            <strong>Release date:</strong> {movie.release_date}
+          </p>
+        )}
+
+        <button onClick={onClose} className={css.closeBtn}>
+          Close
         </button>
-
-        <img
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-          alt={movie.title}
-          className={styles.image}
-        />
-
-        <div className={styles.content}>
-          <h2>{movie.title}</h2>
-          <p>{movie.overview}</p>
-          <p>
-            <strong>Release</strong>: {movie.release_date}
-          </p>
-          <p>
-            <strong>Rating</strong>: {movie.vote_average}/10
-          </p>
-        </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 }
