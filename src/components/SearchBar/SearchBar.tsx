@@ -19,7 +19,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         className={css.input}
         type="text"
         name="query"
-        placeholder="Search movies…"
+        placeholder="Search movies..."
         required
       />
       <button className={css.btn} type="submit">

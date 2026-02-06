@@ -6,3 +6,9 @@ export interface Movie {
   backdrop_path?: string | null;
   release_date?: string;
 }
+
+export interface MoviesResponse {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+}
