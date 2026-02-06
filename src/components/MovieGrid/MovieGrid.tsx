@@ -3,14 +3,14 @@ import styles from "./MovieGrid.module.css";
 
 interface MovieGridProps {
   movies: Movie[];
-  onSelectMovie: (movie: Movie) => void;
+  onSelect: (movie: Movie) => void;
 }
 
-export default function MovieGrid({ movies, onSelectMovie }: MovieGridProps) {
+export default function MovieGrid({ movies, onSelect }: MovieGridProps) {
   return (
     <ul className={styles.grid}>
       {movies.map((movie) => (
-        <li key={movie.id} onClick={() => onSelectMovie(movie)}>
+        <li key={movie.id} onClick={() => onSelect(movie)}>
           <img
             src={
               movie.poster_path
@@ -19,6 +19,7 @@ export default function MovieGrid({ movies, onSelectMovie }: MovieGridProps) {
             }
             alt={movie.title}
           />
+          <p className={styles.title}>{movie.title}</p>
         </li>
       ))}
     </ul>

@@ -1,26 +1,31 @@
+import toast from "react-hot-toast";
 import css from "./SearchBar.module.css";
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  onSubmit: (query: string) => void;
 }
 
-export default function SearchBar({ onSearch }: SearchBarProps) {
-  return (
-    <form
-      className={css.form}
-      action={(formData) => {
-        const value = String(formData.get("query") || "").trim();
-        if (!value) return;
+export default function SearchBar({ onSubmit }: SearchBarProps) {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const value = String(formData.get("query") || "").trim();
+    if (!value) {
+      toast.error("No movies found for your request");
+      return;
+    }
 
-        onSearch(value);
-      }}
-    >
+    onSubmit(value);
+    event.currentTarget.reset();
+  };
+
+  return (
+    <form className={css.form} onSubmit={handleSubmit}>
       <input
         className={css.input}
         type="text"
         name="query"
         placeholder="Search movies..."
-        required
       />
       <button className={css.btn} type="submit">
         Search
